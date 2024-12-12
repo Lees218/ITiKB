@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мониторинг</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #f3e5f5, #e1bee7);
+            color: #4a148c;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .tank {
+            width: 150px;
+            height: 300px;
+            border: 3px solid #7e57c2;
+            background: linear-gradient(to top, #e1bee7, #f3e5f5);
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .water {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            background: linear-gradient(to top, #4fc3f7, #81d4fa);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            transition: height 0.5s ease;
+        }
+        .indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            right: -30px;
+            border: 2px solid #673ab7;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .indicator.lower {
+            top: 80%;
+        }
+        .indicator.upper {
+            top: 10%;
+        }
+        .indicator.active {
+            background: #d32f2f;
+        }
+        .indicator.inactive {
+            background: #81c784;
+        }
+    </style>
+</head>
+<body>
+    <div class="tank">
+        <div class="water" id="water"></div>
+        <div class="indicator lower inactive" id="lower-indicator"></div>
+        <div class="indicator upper inactive" id="upper-indicator"></div>
+    </div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8080');
+        const waterDiv = document.getElementById('water');
+        const lowerIndicator = document.getElementById('lower-indicator');
+        const upperIndicator = document.getElementById('upper-indicator');
+
+        ws.onmessage = (message) => {
+            const data = JSON.parse(message.data);
+            const height = data.waterLevel * 3; // Плавное изменение уровня воды
+            waterDiv.style.height = height + 'px';
+
+            lowerIndicator.className = `indicator lower ${data.lowerIndicator ? 'active' : 'inactive'}`;
+            upperIndicator.className = `indicator upper ${data.upperIndicator ? 'active' : 'inactive'}`;
+        };
+    </script>
+</body>
+</html>
