@@ -17,7 +17,7 @@ function broadcastState() {
         upperIndicator: waterLevel >= 90,
     };
     server.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
+        if (client.readyState === WebSocket.OPEN) { //[[[[[[[[[[[[]]]]]]]]]]]]
             client.send(JSON.stringify(state));
         }
     });
