@@ -39,19 +39,24 @@
                 border-bottom-right-radius: 10px;
                 transition: height 0.5s ease;
             }
+            .indicator-container {
+                position: absolute;
+                left: 160px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
             .indicator {
                 width: 20px;
                 height: 20px;
                 border-radius: 50%;
-                position: absolute;
-                right: -30px;
                 border: 2px solid #673ab7;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
-            .indicator.lower {
+            .indicator-container.lower {
                 top: 80%;
             }
-            .indicator.upper {
+            .indicator-container.upper {
                 top: 10%;
             }
             .indicator.active {
@@ -59,6 +64,13 @@
             }
             .indicator.inactive {
                 background: #81c784;
+            }
+            .indicator-title {
+                visibility: hidden;
+                white-space: nowrap;
+            }
+            .indicator-container:hover .indicator-title {
+                visibility: visible;
             }
             .level-text {
                 font-size: 24px;
@@ -75,10 +87,15 @@
                 height: 100%;
                 background-color: #2c3e50;
             }
-            .buoy {
+            .buoy-container {
                 position: absolute;
                 bottom: 0;
-                left: 50%;
+                left: -126px;
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+            .buoy {
                 transform: translateX(-50%);
                 width: 20px;
                 height: 20px;
@@ -86,16 +103,32 @@
                 background-color: #e74c3c;
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             }
+            .buoy-title {
+                visibility: hidden;
+                white-space: nowrap;
+            }
+            .buoy-container:hover .buoy-title {
+                visibility: visible;
+            }
         </style>
     </head>
     <body>
         <div class="tank-container">
             <div class="tank">
                 <div class="water" id="water"></div>
-                <div class="indicator lower inactive" id="lower-indicator"></div>
-                <div class="indicator upper inactive" id="upper-indicator"></div>
+                <div class="indicator-container lower">
+                    <div class="indicator inactive" id="lower-indicator"></div>
+                    <div class="indicator-title">Индикатор уровеня 10%</div>
+                </div>
+                <div class="indicator-container upper">
+                    <div class="indicator inactive" id="upper-indicator"></div>
+                    <div class="indicator-title">Индикатор уровеня 80%</div>
+                </div>
                 <div class="rope" id="rope"></div>
-                <div class="buoy" id="buoy"></div>
+                <div class="buoy-container" id="buoy">
+                    <div class="buoy-title">Датчик уровня жидкости</div>
+                    <div class="buoy"></div>
+                </div>
             </div>
             <div class="level-text" id="level-text">Уровень воды: 0%</div>
         </div>
