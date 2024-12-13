@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Управление задвижками</title>
@@ -40,14 +40,14 @@
     <body>
         <button onclick="sendCommand('start')">START</button>
         <button onclick="sendCommand('stop')">STOP</button>
-    <button onclick="sendCommand('Alarm')">ALARM</button>
+        <button onclick="sendCommand('Alarm')">ALARM</button>
 
         <script>
-            const ws = new WebSocket('ws://localhost:8080');
+          const ws = new WebSocket('ws://localhost:8080');
 
-            function sendCommand(command) {
-                ws.send(command);
-            }
+          function sendCommand(command) {
+            ws.send(command);
+          }
         </script>
     </body>
 </html>
