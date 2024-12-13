@@ -6,13 +6,14 @@ console.log("Сервер запущен на ws://localhost:8080");
 let waterLevel = 0; // Уровень воды (в процентах)
 let filling = false; // Статус наполнения
 let draining = false; // Статус откачки
-
+let triger = false; // Тригер для аларма
 // Рассылка состояния всем клиентам
 function broadcastState() {
     const state = {
         waterLevel,
         filling,
         draining,
+        triger,
         lowerIndicator: waterLevel >= 20,
         upperIndicator: waterLevel >= 90,
     };
@@ -25,16 +26,18 @@ function broadcastState() {
 
 // Основной цикл управления уровнем воды
 setInterval(() => {
-    if (filling  < 90 && waterLevel < 90 ) {
+    if (filling  == true && waterLevel < 90) {
         waterLevel += 1; // Наполнение
     } else if (filling && waterLevel >= 90) {
         filling = false; // Остановить наполнение
         draining = true; // Начать слив
-    } else if (draining && waterLevel >= 20) {
+    } else if (draining && waterLevel >= 20 && triger == false) {
         waterLevel -= 1; // Слив
-    } else if (draining && waterLevel <= 19) {
+    } else if (draining && waterLevel <= 19 && triger == false) {
         draining = false; // Остановить слив
         filling = true; // Начать наполнение
+    } else if (draining == true && waterLevel !==0 && triger == true){
+        waterLevel -= 1;
     }
 
     broadcastState(); // Отправка обновлений
@@ -57,6 +60,8 @@ server.on('connection', (socket) => {
     socket.on('message', (message) => {
         const command = message.toString();
         if (command === 'start') {
+            triger = false;
+            draining = false;
             filling = true; // Начать наполнение
         } else if (command === 'stop') {
             filling = false; // Остановить процесс
@@ -64,7 +69,7 @@ server.on('connection', (socket) => {
         } else if (command === 'Alarm'){
             filling = false; // Аварийный сборс
             draining = true;
-
+            triger = true;
         }
          
     });
