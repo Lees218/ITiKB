@@ -25,19 +25,20 @@ function broadcastState() {
 
 // Основной цикл управления уровнем воды
 setInterval(() => {
-    if (filling && waterLevel < 90) {
+    if (filling  < 90 && waterLevel < 90 ) {
         waterLevel += 1; // Наполнение
     } else if (filling && waterLevel >= 90) {
         filling = false; // Остановить наполнение
         draining = true; // Начать слив
-    } else if (draining && waterLevel > 20) {
+    } else if (draining && waterLevel >= 20) {
         waterLevel -= 1; // Слив
-    } else if (draining && waterLevel <= 20) {
+    } else if (draining && waterLevel <= 19) {
         draining = false; // Остановить слив
+        filling = true; // Начать наполнение
     }
 
     broadcastState(); // Отправка обновлений
-}, 500); // Обновление каждые 500 мс
+}, 100); // Обновление каждые 500 мс
 
 // Обработка подключений клиентов
 server.on('connection', (socket) => {
@@ -60,6 +61,11 @@ server.on('connection', (socket) => {
         } else if (command === 'stop') {
             filling = false; // Остановить процесс
             draining = false;
+        } else if (command === 'Alarm'){
+            filling = false; // Аварийный сборс
+            draining = true;
+
         }
+         
     });
 });
