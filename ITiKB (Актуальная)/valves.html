@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Состояние задвижек</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #f0f4f7, #dcdde1);
+            color: #34495e;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .valve-status {
+            margin: 20px;
+            padding: 15px;
+            width: 300px;
+            text-align: center;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease; /* Плавное изменение */
+        }
+
+        .status {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Классы для состояния открытых и закрытых задвижек */
+        .open {
+            color: #27ae60; /* Зеленый цвет */
+        }
+
+        .closed {
+            color: #e74c3c; /* Красный цвет */
+        }
+
+        /* Плавное изменение цвета фона при наведении */
+        .valve-status:hover {
+            background-color: #f39c12; /* Желтый при наведении */
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Добавление тени */
+        }
+
+        .valve-status:hover .status {
+            color: #ffffff; /* Белый цвет текста при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="valve-status">
+        <div>Задвижка подачи: <span id="filling-valve" class="status closed">Закрыта</span></div>
+    </div>
+    <div class="valve-status">
+        <div>Задвижка сброса: <span id="draining-valve" class="status closed">Закрыта</span></div>
+    </div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8080');
+
+        ws.onmessage = (message) => {
+            const data = JSON.parse(message.data);
+
+            const fillingValve = document.getElementById('filling-valve');
+            const drainingValve = document.getElementById('draining-valve');
+
+            // Обновляем текст и цвет для состояния задвижек
+            fillingValve.textContent = data.filling ? 'Открыта' : 'Закрыта';
+            fillingValve.className = `status ${data.filling ? 'open' : 'closed'}`;
+
+            drainingValve.textContent = data.draining ? 'Открыта' : 'Закрыта';
+            drainingValve.className = `status ${data.draining ? 'open' : 'closed'}`;
+        };
+    </script>
+</body>
+</html>
